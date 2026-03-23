@@ -1,0 +1,31 @@
+services:
+  simulator:
+    build:
+      context: .
+      dockerfile: Containerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "ScenarioSim!2024"
+    ports:
+      - "1433:1433"
+    profiles:
+      - sqlserver
+      - full
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_PASSWORD: "ScenarioSim2024"
+      POSTGRES_DB: "scenariodb"
+    ports:
+      - "5432:5432"
+    profiles:
+      - postgres
+      - full

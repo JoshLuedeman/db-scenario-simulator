@@ -1,0 +1,23 @@
+{
+  "id": "concurrent_updates",
+  "name": "Concurrent Row Updates",
+  "description": "Multiple threads repeatedly update the same rows, causing contention and demonstrating optimistic vs pessimistic locking behavior.",
+  "category": "Blocking & Locking",
+  "db_types": ["sqlserver", "postgres"],
+  "threads": [
+    {
+      "count": 4,
+      "loop": true,
+      "delay_seconds": 0.05,
+      "steps": [
+        {
+          "sql": {
+            "sqlserver": "UPDATE scenario_accounts SET balance = balance + 1 WHERE id = (SELECT TOP 1 id FROM scenario_accounts ORDER BY NEWID())",
+            "postgres": "UPDATE scenario_accounts SET balance = balance + 1 WHERE id = (SELECT id FROM scenario_accounts ORDER BY RANDOM() LIMIT 1)"
+          }
+        },
+        { "commit": true }
+      ]
+    }
+  ]
+}
